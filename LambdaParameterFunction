@@ -1,0 +1,272 @@
+//+++++++++++++++++++++++++++++++++++++++++ Getting Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// const https = require('https');
+// exports.handler = async (event) => {
+//     let dataString = '';
+//     let chunk='This is lambdaparameter function';
+//     const response = await new Promise((resolve, reject) => {
+//         const req = https.get("https://gdugvxp4v6j2i5m42liqbmuxsu0tumgq.lambda-url.us-east-1.on.aws/", function(res) {
+//           res.on('data', chunk => {
+//             dataString += chunk;
+//             console.log("logged datastring" +dataString);
+//             dataString="its updated now!"
+//             console.log("logged datastring" +dataString);
+//           });
+//           res.on('end', () => {
+//             resolve({
+//               // statusCode: 200,
+//                 body: dataString,chunk
+//             });
+//           });
+//         });
+//           //console.log("chunk is"+chunk[1]);
+//         req.on('error', (e) => {
+//           reject({
+//               statusCode: 500,
+//               body: 'Something went wong!'
+//           });
+//         });
+//     });
+
+//     return response;
+// };
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++Value Update Code+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+// exports.handler = async (event) => {
+//     console.log("event is " + JSON.stringify(event)); // event.body["number2"]
+//     var eventBody = JSON.parse(event["body"]);
+//     console.log("event body=" +eventBody );
+//     console.log("event body - number2 =" +eventBody["number2"] );
+//   // return eventBody["number2"];
+//     const ssm = new(require('aws-sdk/clients/ssm'))()
+//     //     var params = {
+//     //           Name: 'num2',
+//     //           Value: '11',
+//     //           Overwrite: true,
+//     //           Type: 'String'
+//     //     };
+
+//     //   // Update existing userName
+//     //     await ssm.putParameter(params).promise();
+//     const data = await ssm.getParameters({
+//         Names: [`num2`]
+//     }).promise();
+//     let number1 = parseInt(data["Parameters"][0]["Value"]);
+//     let number2 = parseInt(eventBody["number2"]);
+//     let sum = number1 + number2;
+//     let summedvalue = sum.toString();
+//     let myname = 'yasrab';
+//     console.log("number 1 =", number1);
+//     console.log("number 2=", number2);
+//     console.log("number 3=", summedvalue);
+//     //console.log("this is data"+JSON.stringify(data));
+//     //console.log("new value"+JSON.stringify(data["Parameters"][0]["Value"]));
+//     const response = {
+//         body: summedvalue
+//     };
+//     console.log("this is", JSON.stringify(response));
+//     return summedvalue ;
+// };
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++///////////////////////
+//++++++++++++++++++++++++++++++++++++++++++++++++Task to create subscriber ID++++++++++++++++++++++++++++++++++++++++//
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+exports.handler = async (event) => {
+  //let a=JSON.parse(event["body"])
+
+  // console.log("its event body after parse"+a);
+  // const userdata = JSON.parse(event.body)["UserData"];
+  //console.log("its userdata mohib new"+userdata)
+  // console.log("body is " + JSON.stringify(event["body"]));
+  // console.log("body + user data  is " + JSON.stringify(event["body"].UserData));
+  console.log("normal" + event["body"]);
+  let a = JSON.parse(event["body"]);
+  let b = JSON.stringify(a["UserData"]["Street"]);
+  let firstname = a["UserData"]["FirstName"];
+  let lastname = a["UserData"]["LastName"];
+  let street = a["UserData"]["Street"];
+  let postalcode = a["UserData"]["Postalcode"];
+  let address = a["UserData"]["Address"];
+  let city = a["UserData"]["City"];
+  let state = a["UserData"]["State"];
+  let accounttype = a["UserData"]["AccountType"];
+  console.log("parsed" + b);
+  // event.body["number2"]
+  // var eventBody = JSON.parse(event["body"]);
+  //console.log(event["body"]);
+  //console.log("event body=" event.body() );
+  // console.log("event body - number2 =" +eventBody["number2"] );
+  // return eventBody["number2"];
+  // const ssm = new(require('aws-sdk/clients/ssm'))()
+  //     var params = {
+  //           Name: 'num2',
+  //           Value: '11',
+  //           Overwrite: true,
+  //           Type: 'String'
+  //     };
+
+  //   // Update existing userName
+  //     await ssm.putParameter(params).promise();
+  // const data = await ssm.getParameters({
+  //     Names: [`num2`]
+  // }).promise();
+  // let number1 = parseInt(data["Parameters"][0]["Value"]);
+  // let number2 = parseInt(eventBody["number2"]);
+  // let sum = number1 + number2;
+  // let summedvalue = sum.toString();
+  // let myname = 'yasrab';
+  // console.log("number 1 =", number1);
+  // console.log("number 2=", number2);
+  // console.log("number 3=", summedvalue);
+  // //console.log("this is data"+JSON.stringify(data));
+  // //console.log("new value"+JSON.stringify(data["Parameters"][0]["Value"]));
+  // const response = {
+  //     body: summedvalue
+  // };
+  // console.log("this is", JSON.stringify(response));
+
+
+
+  var axios = require('axios');
+  var qs = require("qs");
+  var hostname = "https://clearwavetest.cdgportal.com";
+  var url = {
+    query: hostname + "/main/infr/m_infr_query_table.php",
+    api: hostname + "/main/infr/m_infr_app_request.php"
+  };
+
+
+  var config = {
+    method: 'post',
+    url: '',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': 0
+    },
+    data: null
+  };
+
+
+  async function makeAPIRequest(data) {
+    const response = await new Promise((resolve, reject) => {
+      // Request Configuration
+      config.url = url.api;
+      config.headers["Content-Length"] = data.length;
+      config.data = data;
+
+      axios(config).then(function(response) {
+          resolve(JSON.stringify(response.data));
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    }).then((query_response) => {
+      return JSON.parse(query_response);
+    });
+    return response;
+  }
+
+
+
+  var apiSetting = {
+    companyId: "0101",
+    requestUserId: "arsalan",
+    apiReturnFormat: "JSON",
+  };
+
+  var serviceAddressId = "";
+
+
+  // Create a Service Address
+  var data = qs.stringify({
+    companyId: apiSetting.companyId,
+    requestUserId: apiSetting.requestUserId,
+    webServiceKey: process.env.WEB_SERVICE_KEY,
+    appRequest: "companyAddServiceAddressByMatch",
+    addressLine1: street,
+    postalCode: postalcode,
+    cityId: city,
+    stateProvinceId: state,
+    apiReturnFormat: apiSetting.apiReturnFormat,
+  });
+console.log(data.length);
+  var response = await makeAPIRequest(data);
+  console.log("response is" + JSON.stringify(response));
+  serviceAddressId = response.serviceAddressId;
+  console.log("this is the service addressid" + serviceAddressId)
+  // return response;
+
+
+
+
+  // FIRST - Create a subscriber with one product
+
+  //var service_address_data = await addServiceAddress(xl_data);
+
+
+  var completeSubscriberResponse = '';
+  // Create a Subscriber
+  var data2 = qs.stringify({
+    'companyId': apiSetting.companyId,
+    'requestUserId': apiSetting.requestUserId,
+    'webServiceKey': process.env.WEB_SERVICE_KEY,
+    'appRequest': 'subscriberAddComplete',
+    'subscriberType': (accounttype === "Business" ? "B" : "R"),
+    'accountStructureId': (accounttype === "Business" ? "2" : "1"), // 2:Business , 1:Residential
+    'organizationName': (accounttype === "Business" ? "Demo Organization" : ""),
+    'personFirstName': firstname,
+    'personLastName': lastname,
+    'creditClass': 'B',
+    'addressLine1': street,
+    'addressPostalCode': postalcode,
+    'addressStateProvId': state,
+    'addressCityId': city,
+    'accountType': accounttype,
+    'taxCountryId': 1,
+    'invoiceChargeMethod': 'A',
+    'paymentTermId': 'Basic',
+    'completeSession':'Y',
+    //  'productCode': products[0]["Product Code"],
+    'serviceAddressId': serviceAddressId,
+    'apiReturnFormat': 'JSON'
+  });
+console.log("this is data2"+data2)
+  completeSubscriberResponse = await makeAPIRequest(data2);
+
+  console.log("Subscriber Response:-", completeSubscriberResponse);
+console.log("subscriber id="+completeSubscriberResponse.subscriberId)
+
+
+ var productResponse = "";
+  
+      var data = qs.stringify({
+        companyId: apiSetting.companyId,
+        requestUserId: apiSetting.requestUserId,
+        webServiceKey: process.env.WEB_SERVICE_KEY,
+        appRequest: "productAdd",
+        subscriberId: completeSubscriberResponse.subscriberId,
+        accountId: completeSubscriberResponse.accountId,
+        sessionId: completeSubscriberResponse.sessionId,
+        productCode: 19,
+        serviceAddressId: serviceAddressId,
+        apiReturnFormat: apiSetting.apiReturnFormat,
+      });
+      productResponse = await makeAPIRequest(data);
+      
+    console.log("its product response"+JSON.stringify(productResponse));
+
+
+
+
+
+
+return completeSubscriberResponse.subscriberId;
+};
