@@ -1,116 +1,37 @@
-// get existing parameter value
-// exports.handler = async (event) => {
-//      const ssm = new (require('aws-sdk/clients/ssm'))();
-
-//      const data= await ssm.getParameters({
-//             Names: [`Football`]
-
-//     }).promise();
-
-//     const response = {
-//         statusCode: 200,
-//         body: data,
-//     };
-//   return response;
-// };
-
-
-// update existing parameter value
-
-
-// exports.handler = async (event) => {
-//     const ssm = new (require('aws-sdk/clients/ssm'))();
-//     var params = {
-//           Name: 'Football',
-//           Value: 'Ronald00 changed',
-//           Overwrite: true,
-//           Type: 'String'
-//     };
-
-//     // Update existing userName
-//     await ssm.putParameter(params).promise();
-//     const data= await ssm.getParameters({
-//             Names: [`Football`]
-//     }).promise();
-//         console.log("this is data"+JSON.stringify(data));
-
-//  console.log("new value"+JSON.stringify(data["Parameters"][0]["Value"]));
-//     const response = {
-//         String:'Value Updated',
-//         statusCode: 200,
-//         body: data,
-//     };
-//   return response;
-// };
+//++++++++++++++++++++++++++++Getting response in a body+++++++++++++++++++++++++++++++++++++++++++
 
 
 
+const https = require('https');
+exports.handler = async (event) => {
+    let dataString = '';
 
-
-// exports.handler = async (event) => {
-//     console.log("event is " + JSON.stringify(event)); 
-//     var eventBody = (event["body"]);
-
-//     const ssm = new(require('aws-sdk/clients/ssm'))();
-
-//     const data = await ssm.getParameters({
-//         Names: [`task`]
-//     }).promise();
-//     let num = parseInt(data["Parameters"][0]["Value"]);
-//     let value = parseInt(eventBody["value"]);
-//     let add = num + value;
-//     let total = add.toString();
-
-//         console.log("total=", total);
-
-//     const response = {
-//         body: total
-//     };
-//     console.log("this is", JSON.parse(response));
-//     console.log(JSON.parse(undefined));
-//     return response ;
-// };
-
-
-// exports.handler = async (event) => {
-//     console.log("event is " + JSON.stringify(event)); // event.body["number2"]
-//     var eventBody =JSON.parse(event["body"]);
-//     //console.log(JSON.parse(undefined));
-//     console.log("event body=" +eventBody );
-//     const ssm = new(require('aws-sdk/clients/ssm'))()
-
-//     // const data = await ssm.getParameters({
-//     //     Names: [`task`]
-//     // }).promise();
-//     // let number1 = parseInt(data["Parameters"][0]["Value"]);
-//     // let number2 = parseInt(eventBody["value"]);
-//     // // let sum = number1 + number2;
-//     // // let summedvalue = sum.toString();
-//     // // console.log("number 1 =", number1);
-//     // console.log("number 2=", number2);
-//     // // console.log("number 3=", summedvalue);
-
-//     const response = {
-//         body: eventBody
-//     };
-//     // console.log("this is", JSON.stringify(response));
-//      return eventBody ;
-// };
-
-
-// exports.handler = async (event) => {
-//     console.log("event is " + JSON.stringify(event));
-
-//     const ssm = new(require('aws-sdk/clients/ssm'))()
-
-
-
-//     const response = {
-//         body: event["body"]
-//     };
-//      console.log("this is", JSON.stringify(response));
-//      //return eventBody ;
-// };
+    const response = await new Promise((resolve, reject) => {
+        const req = https.get("https://4yun5xf7zjontq3tkkf7vv3szi0qjrkm.lambda-url.us-east-1.on.aws/", function(res) {
+          res.on('data', chunk => {
+            dataString += chunk;
+            console.log("logged datastring" +dataString);
+            //dataString="its updated now!"
+          // console.log("logged datastring" +dataString);
+          });
+          res.on('end', () => {
+            resolve({
+              // statusCode: 200,
+                body: dataString
+            });
+          });
+        });
+          //console.log("chunk is"+chunk[1]);
+        req.on('error', (e) => {
+          reject({
+              statusCode: 500,
+              body: 'Something went wrong!'
+          });
+        });
+    });
+    
+    return response;
+};
 
 
 
